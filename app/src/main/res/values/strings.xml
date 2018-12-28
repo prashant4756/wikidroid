@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WikiDroid</string>
     <string name="wikidroid">WikiDroid</string>
+    <string name="search_wikipedia">Search Wikipedia</string>
 </resources>
