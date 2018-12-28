@@ -4,7 +4,11 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 
 import com.example.wikidroid.API;
+import com.example.wikidroid.dao.WikiPostDao;
 import com.example.wikidroid.network.NetworkClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.NetworkInterface;
 import java.util.concurrent.TimeUnit;
@@ -23,9 +27,11 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
     private static final String TAG = "MainActivityPresenter";
     MainActivityViewInterface mainActivityViewInterface;
+    private WikiPostDao wikiPostDao;
 
     public MainActivityPresenter(MainActivityViewInterface mainActivityViewInterface) {
         this.mainActivityViewInterface = mainActivityViewInterface;
+        this.wikiPostDao = new WikiPostDao();
     }
 
     @Override
@@ -37,6 +43,7 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
                         if(s.equals("")){
                             return false;
                         }else{
+                            mainActivityViewInterface.showProgressBar();
                             return true;
                         }
                     }
@@ -84,8 +91,15 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
             @Override
             public void onNext(@NonNull String stringResponse) {
                 Log.d(TAG,"OnNext : "+stringResponse);
-                mainActivityViewInterface.hideProgressBar();
-                mainActivityViewInterface.displayResult(null);
+                try {
+                    wikiPostDao.updateLocalFromJson(new JSONObject(stringResponse));
+                    mainActivityViewInterface.hideProgressBar();
+                    mainActivityViewInterface.displayResult(wikiPostDao.getAllWikiPost());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mainActivityViewInterface.hideProgressBar();
+                    mainActivityViewInterface.displayError(e.getMessage());
+                }
             }
 
             @Override

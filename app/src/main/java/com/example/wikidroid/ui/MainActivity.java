@@ -15,7 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.wikidroid.R;
+import com.example.wikidroid.adapter.WikiPostAdapter;
 import com.example.wikidroid.pojo.WikiPost;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     ProgressBar progressBar;
 
     private SearchView searchView;
-    RecyclerView.Adapter adapter;
+    WikiPostAdapter adapter;
+    private ArrayList<WikiPost> data;
 
     private MainActivityPresenter mainActivityPresenter;
 
@@ -51,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
 
         setSupportActionBar(toolbar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        data = new ArrayList<>();
+        adapter = new WikiPostAdapter(data, MainActivity.this);
+        recyclerView.setAdapter(adapter);
     }
 
     private void setupMVP(){
@@ -93,7 +100,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
 
     @Override
     public void displayResult(RealmResults<WikiPost> wikiPostRealmResults) {
-
+        data.clear();
+        data.addAll(wikiPostRealmResults);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
