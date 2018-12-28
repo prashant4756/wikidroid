@@ -67,17 +67,25 @@ public class WikiPostDao {
 
                     if(pages != null){
                         for(int i = 0; i < pages.length(); i++){
-                            JSONObject pageData = pages.optJSONObject(i);
+
+                            JSONObject pageData = null, terms = null, thumbnailObject = null;
+                            JSONArray descriptionArray = null;
+                            String imageSource = "", description = "";
+
+                            pageData = pages.optJSONObject(i);
                             if(pageData != null) {
                                 int pageid = pageData.optInt("pageid",-1);
                                 String title = pageData.optString("title", "N/A");
-                                String imageSource = "", description = "";
-                                JSONObject thumbnailObject = pageData.optJSONObject("thumbnail");
+
+                                thumbnailObject = pageData.optJSONObject("thumbnail");
                                 if(thumbnailObject != null && thumbnailObject.has("source"))
                                     imageSource = thumbnailObject.optString("source", "N/A");
-                                JSONObject terms = pageData.optJSONObject("terms");
-                                if(terms != null && terms.has("description"))
-                                    description = terms.optString("description", "N/A");
+                                terms = pageData.optJSONObject("terms");
+                                if(terms != null && terms.has("description")) {
+                                    descriptionArray = terms.optJSONArray("description");
+                                    if(descriptionArray != null)
+                                        description = descriptionArray.optString(0, "N/A");
+                                }
 
                                 WikiPost wikiPost = realm.where(WikiPost.class).equalTo("id", pageid).findFirst();
                                 if(wikiPost == null)

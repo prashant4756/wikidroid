@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.wikidroid.R;
 import com.example.wikidroid.pojo.WikiPost;
 
@@ -40,7 +41,7 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
         holder.tvTitle.setText(wikiPost.getTitle());
         holder.tvOverView.setText(wikiPost.getDescription());
 
-        Glide.with(context).load(wikiPost.getThumbnailUrl()).into(holder.icon);
+        Glide.with(context).setDefaultRequestOptions(new RequestOptions().error(context.getResources().getDrawable(android.R.drawable.ic_menu_gallery))).load(wikiPost.getThumbnailUrl()).into(holder.icon);
     }
 
     @Override

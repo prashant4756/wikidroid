@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -76,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
                 .getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setQueryHint(getString(R.string.search_wikipedia));
+
+
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.white));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.white));
+
 
         mainActivityPresenter.getResultsBasedOnQuery(searchView);
 
