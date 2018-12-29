@@ -6,11 +6,13 @@ import android.util.Log;
 import com.example.wikidroid.API;
 import com.example.wikidroid.dao.WikiPostDao;
 import com.example.wikidroid.network.NetworkClient;
+import com.example.wikidroid.pojo.WikiPost;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -68,6 +70,11 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
         mainActivityViewInterface.launchWikiDetails(postID);
     }
 
+    @Override
+    public void setVisitedData() {
+        mainActivityViewInterface.displayVisitedData(wikiPostDao.getVisitedWikiPost());
+    }
+
     private Observable<String> getObservableQuery(SearchView searchView){
 
         final PublishSubject<String> publishSubject = PublishSubject.create();
@@ -97,9 +104,10 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
             public void onNext(@NonNull String stringResponse) {
                 Log.d(TAG,"OnNext : "+stringResponse);
                 try {
-                    wikiPostDao.updateLocalFromJson(new JSONObject(stringResponse));
+
+                    ArrayList<WikiPost> results = wikiPostDao.updateLocalFromJson(new JSONObject(stringResponse));
                     mainActivityViewInterface.hideProgressBar();
-                    mainActivityViewInterface.displayResult(wikiPostDao.getAllWikiPost());
+                    mainActivityViewInterface.displayResult(results);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     mainActivityViewInterface.hideProgressBar();

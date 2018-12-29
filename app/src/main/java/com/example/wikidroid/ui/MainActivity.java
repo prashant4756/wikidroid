@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
 
         setupViews();
         setupMVP();
+        setUpVisitedData();
     }
 
     private void setupViews() {
@@ -65,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
 
     private void setupMVP(){
         mainActivityPresenter = new MainActivityPresenter(this);
+    }
+
+    private void setUpVisitedData() {
+        mainActivityPresenter.setVisitedData();
     }
 
     @Override
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     }
 
     @Override
-    public void displayResult(RealmResults<WikiPost> wikiPostRealmResults) {
+    public void displayResult(ArrayList<WikiPost> wikiPostRealmResults) {
         data.clear();
         data.addAll(wikiPostRealmResults);
         adapter.notifyDataSetChanged();
@@ -133,5 +138,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     public void launchWikiDetails(int postID) {
         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayVisitedData(RealmResults<WikiPost> wikiPostRealmResults) {
+        data.clear();
+        data.addAll(wikiPostRealmResults);
+        adapter.notifyDataSetChanged();
     }
 }

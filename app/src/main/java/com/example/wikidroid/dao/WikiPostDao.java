@@ -5,6 +5,8 @@ import com.example.wikidroid.pojo.WikiPost;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -55,7 +57,8 @@ public class WikiPostDao {
       ]
    }
 }*/
-    public void updateLocalFromJson(JSONObject data){
+    public ArrayList<WikiPost> updateLocalFromJson(JSONObject data){
+        ArrayList<WikiPost> wikiPosts = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -63,7 +66,7 @@ public class WikiPostDao {
                 if(query != null){
                     JSONArray pages = query.optJSONArray("pages");
 
-                    realm.where(WikiPost.class).equalTo("visited",false).findAll().deleteAllFromRealm();
+//                    realm.where(WikiPost.class).equalTo("visited",false).findAll().deleteAllFromRealm();
 
                     if(pages != null){
                         for(int i = 0; i < pages.length(); i++){
@@ -94,12 +97,15 @@ public class WikiPostDao {
                                 wikiPost.setTitle(title);
                                 wikiPost.setDescription(description);
                                 wikiPost.setThumbnailUrl(imageSource);
+                                wikiPosts.add(wikiPost);
                             }
                         }
                     }
                 }
             }
         });
+
+        return wikiPosts;
     }
 
     public RealmResults<WikiPost> getAllWikiPost(){
@@ -110,5 +116,16 @@ public class WikiPostDao {
     public RealmResults<WikiPost> getVisitedWikiPost(){
         // need to be handled properly
         return mRealm.where(WikiPost.class).equalTo("visited",true).findAll();
+    }
+
+    public void setPostVisited(int id) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                WikiPost wikiPost = realm.where(WikiPost.class).equalTo("id", id).findFirst();
+                if(wikiPost != null)
+                    wikiPost.setVisited(true);
+            }
+        });
     }
 }

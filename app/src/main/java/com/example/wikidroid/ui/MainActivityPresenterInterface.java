@@ -5,4 +5,5 @@ import android.support.v7.widget.SearchView;
 public interface MainActivityPresenterInterface {
     void getResultsBasedOnQuery(SearchView searchView);
     void launchWikiDetails(int postID);
+    void setVisitedData();
 }

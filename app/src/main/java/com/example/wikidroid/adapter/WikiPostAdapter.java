@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.wikidroid.R;
+import com.example.wikidroid.dao.WikiPostDao;
 import com.example.wikidroid.pojo.WikiPost;
 import com.example.wikidroid.ui.MainActivityPresenter;
 import com.example.wikidroid.ui.MainActivityViewInterface;
@@ -24,11 +25,13 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
     private ArrayList<WikiPost> data;
     private Context context;
     private MainActivityPresenter mainActivityPresenter;
+    private WikiPostDao wikiPostDao;
 
     public WikiPostAdapter(ArrayList<WikiPost> wikiPosts, Context context, MainActivityViewInterface mainActivityViewInterface) {
         this.data = wikiPosts;
         this.context = context;
         this.mainActivityPresenter = new MainActivityPresenter(mainActivityViewInterface);
+        this.wikiPostDao = new WikiPostDao();
     }
 
     @NonNull
@@ -50,6 +53,7 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                wikiPostDao.setPostVisited(wikiPost.getId());
                 mainActivityPresenter.launchWikiDetails(wikiPost.getId());
             }
         });
