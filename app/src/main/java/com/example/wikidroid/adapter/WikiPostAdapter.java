@@ -54,7 +54,7 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 wikiPostDao.setPostVisited(wikiPost.getId());
-                mainActivityPresenter.launchWikiDetails(wikiPost.getId());
+                mainActivityPresenter.fetchPostUrl(wikiPost.getId());
             }
         });
     }

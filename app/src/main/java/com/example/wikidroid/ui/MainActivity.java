@@ -134,8 +134,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     }
 
     @Override
-    public void launchWikiDetails(int postID) {
+    public void launchWikiDetails(String postUrl) {
         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+        intent.putExtra("url", postUrl);
         startActivity(intent);
     }
 

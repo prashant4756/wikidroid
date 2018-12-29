@@ -128,4 +128,56 @@ public class WikiPostDao {
             }
         });
     }
+
+    public String getPostUrl(int postId) {
+        WikiPost wikiPost =  mRealm.where(WikiPost.class).equalTo("id", postId).findFirst();
+        if(wikiPost != null )
+            return wikiPost.getPageUrl();
+        return null;
+    }
+
+
+    /*{
+"batchcomplete": "",
+    "query": {
+        "pages": {
+            "736": {
+            "pageid": 736,
+            "ns": 0,
+            "title": "Albert Einstein",
+            "contentmodel": "wikitext",
+            "pagelanguage": "en",
+            "pagelanguagehtmlcode": "en",
+            "pagelanguagedir": "ltr",
+            "touched": "2018-12-27T10:13:37Z",
+            "lastrevid": 875113726,
+            "length": 154715,
+            "fullurl": "https://en.wikipedia.org/wiki/Albert_Einstein",
+            "editurl": "https://en.wikipedia.org/w/index.php?title=Albert_Einstein&action=edit",
+            "canonicalurl": "https://en.wikipedia.org/wiki/Albert_Einstein"
+            }
+    }
+}
+}*/
+    public String updatePostUrl(int pageId, JSONObject response) {
+        final String[] url = {null};
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                try{
+                    JSONObject query = response.getJSONObject("query");
+                    JSONObject pages = query.getJSONObject("pages");
+                    JSONObject pageDetails = pages.getJSONObject(String.valueOf(pageId));
+                    String tempurl = pageDetails.optString("fullurl", null);
+                    url[0] = tempurl;
+                    WikiPost wikiPost = realm.where(WikiPost.class).equalTo("id", pageId).findFirst();
+                    if(wikiPost != null)
+                        wikiPost.setPageUrl(url[0]);
+                }catch (Exception e){
+
+                }
+            }
+        });
+        return url[0];
+    }
 }

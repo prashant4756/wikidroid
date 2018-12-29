@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class WebViewActivity extends AppCompatActivity implements WebDetailsView
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     private WikiDetailsPresenter wikiDetailsPresenter;
+    private String url;
 
 
     @Override
@@ -32,11 +35,11 @@ public class WebViewActivity extends AppCompatActivity implements WebDetailsView
         ButterKnife.bind(this);
         setUpViews();
         setupMVP();
-        fetchUrl("postID");
+        fetchUrl();
     }
 
-    private void fetchUrl(String postID) {
-        wikiDetailsPresenter.getPostUrl(webView, postID);
+    private void fetchUrl() {
+        wikiDetailsPresenter.loadPostUrl(getIntent().getStringExtra("url"));
     }
 
     private void setupMVP(){
@@ -45,6 +48,19 @@ public class WebViewActivity extends AppCompatActivity implements WebDetailsView
 
     private void setUpViews() {
         setSupportActionBar(toolbar);
+
+        // Enable javascript
+        webView.getSettings().setJavaScriptEnabled(true);
+        // Set WebView client
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 
     @Override

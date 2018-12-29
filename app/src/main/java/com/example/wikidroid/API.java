@@ -10,4 +10,8 @@ public interface API {
     Observable<String> getWikiResultsFromQuery(
             @Query("gpssearch") String query);
 
+
+    //api.php?action=query&prop=info&pageids=736&inprop=url
+    @GET("api.php?action=query&format=json&prop=info&inprop=url")
+    Observable<String> getPageUrl(@Query("pageids") int pageId);
 }

@@ -1,5 +1,6 @@
 package com.example.wikidroid.ui;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
@@ -22,6 +23,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -66,9 +68,48 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
     }
 
+    @SuppressLint("CheckResult")
     @Override
-    public void launchWikiDetails(int postID) {
-        mainActivityViewInterface.launchWikiDetails(postID);
+    public void fetchPostUrl(int postId) {
+        String wikiPostUrl = wikiPostDao.getPostUrl(postId);
+        if(wikiPostUrl != null)
+            mainActivityViewInterface.launchWikiDetails(wikiPostUrl);
+
+        else {
+            mainActivityViewInterface.showProgressBar();
+            NetworkClient.getRetrofit().create(API.class)
+                .getPageUrl(postId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        //response
+                        Log.d(TAG, "urlFetch : "+s);
+                        try {
+                            mainActivityViewInterface.hideProgressBar();
+                            String url = wikiPostDao.updatePostUrl(postId, new JSONObject(s));
+                            if(url != null)
+                                mainActivityViewInterface.launchWikiDetails(url);
+                            else
+                                mainActivityViewInterface.displayError("Unable to fetch details right now!");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG,"Error"+e.getMessage());
+                        mainActivityViewInterface.hideProgressBar();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG,"URL fetch completed");
+                    }
+                });
+        }
     }
 
     @Override

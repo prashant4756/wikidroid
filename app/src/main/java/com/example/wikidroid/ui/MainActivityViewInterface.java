@@ -12,6 +12,6 @@ public interface MainActivityViewInterface {
     void displayError(String s);
     void showProgressBar();
     void hideProgressBar();
-    void launchWikiDetails(int postID);
+    void launchWikiDetails(String postUrl);
     void displayVisitedData(RealmResults<WikiPost> wikiPostRealmResults);
 }

@@ -10,9 +10,7 @@ public class WikiDetailsPresenter implements WikiDetailsPresenterInterface {
     }
 
     @Override
-    public void getPostUrl(WebView webView, String postID) {
-        //fetch from local/ if not present get from api
-        String url = "http://www.google.com";
+    public void loadPostUrl(String url) {
         webDetailsViewInterface.loadUrl(url);
     }
 }
