@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.wikidroid.R;
 import com.example.wikidroid.pojo.WikiPost;
+import com.example.wikidroid.ui.MainActivityPresenter;
+import com.example.wikidroid.ui.MainActivityViewInterface;
 
 import java.util.ArrayList;
 
@@ -21,10 +23,12 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
 
     private ArrayList<WikiPost> data;
     private Context context;
+    private MainActivityPresenter mainActivityPresenter;
 
-    public WikiPostAdapter(ArrayList<WikiPost> wikiPosts, Context context) {
+    public WikiPostAdapter(ArrayList<WikiPost> wikiPosts, Context context, MainActivityViewInterface mainActivityViewInterface) {
         this.data = wikiPosts;
         this.context = context;
+        this.mainActivityPresenter = new MainActivityPresenter(mainActivityViewInterface);
     }
 
     @NonNull
@@ -38,10 +42,17 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
 
         WikiViewHolder holder = (WikiViewHolder) viewHolder;
         WikiPost wikiPost = data.get(position);
-        holder.tvTitle.setText(wikiPost.getTitle());
-        holder.tvOverView.setText(wikiPost.getDescription());
 
         Glide.with(context).setDefaultRequestOptions(new RequestOptions().error(context.getResources().getDrawable(android.R.drawable.ic_menu_gallery))).load(wikiPost.getThumbnailUrl()).into(holder.icon);
+
+        holder.tvTitle.setText(wikiPost.getTitle());
+        holder.tvOverView.setText(wikiPost.getDescription());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivityPresenter.launchWikiDetails(wikiPost.getId());
+            }
+        });
     }
 
     @Override
@@ -61,6 +72,7 @@ public class WikiPostAdapter extends RecyclerView.Adapter {
             icon = itemView.findViewById(R.id.icon);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverView = itemView.findViewById(R.id.tvOverView);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }

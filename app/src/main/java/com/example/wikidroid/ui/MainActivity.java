@@ -2,6 +2,7 @@ package com.example.wikidroid.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.wikidroid.R;
 import com.example.wikidroid.adapter.WikiPostAdapter;
 import com.example.wikidroid.pojo.WikiPost;
+import com.example.wikidroid.ui.wikipostdetails.WebViewActivity;
 
 import java.util.ArrayList;
 
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
         setSupportActionBar(toolbar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         data = new ArrayList<>();
-        adapter = new WikiPostAdapter(data, MainActivity.this);
+        adapter = new WikiPostAdapter(data, MainActivity.this, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -125,5 +127,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void launchWikiDetails(int postID) {
+        Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+        startActivity(intent);
     }
 }

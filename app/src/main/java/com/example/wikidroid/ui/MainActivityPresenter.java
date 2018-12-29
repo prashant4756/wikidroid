@@ -63,6 +63,11 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
     }
 
+    @Override
+    public void launchWikiDetails(int postID) {
+        mainActivityViewInterface.launchWikiDetails(postID);
+    }
+
     private Observable<String> getObservableQuery(SearchView searchView){
 
         final PublishSubject<String> publishSubject = PublishSubject.create();

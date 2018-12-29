@@ -10,4 +10,5 @@ public interface MainActivityViewInterface {
     void displayError(String s);
     void showProgressBar();
     void hideProgressBar();
+    void launchWikiDetails(int postID);
 }
