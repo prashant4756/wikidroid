@@ -43,6 +43,7 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
                     @Override
                     public boolean test(@NonNull String s) throws Exception {
                         if(s.equals("")){
+                            mainActivityViewInterface.displayVisitedData(wikiPostDao.getVisitedWikiPost());
                             return false;
                         }else{
                             mainActivityViewInterface.showProgressBar();

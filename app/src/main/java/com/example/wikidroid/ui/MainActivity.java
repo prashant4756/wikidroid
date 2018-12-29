@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
 
         mainActivityPresenter.getResultsBasedOnQuery(searchView);
 
-
         return super.onCreateOptionsMenu(menu);
     }
 
