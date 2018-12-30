@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     private ArrayList<WikiPost> data;
 
     private MainActivityPresenter mainActivityPresenter;
-
+    private EditText searchEditText;
 
 
     @Override
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
         searchView.setQueryHint(getString(R.string.search_wikipedia));
 
 
-        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.white));
         searchEditText.setHintTextColor(getResources().getColor(R.color.white));
 
