@@ -14,4 +14,8 @@ public interface MainActivityViewInterface {
     void hideProgressBar();
     void launchWikiDetails(String postUrl);
     void displayVisitedData(RealmResults<WikiPost> wikiPostRealmResults);
+
+    void hideMessageBanner();
+
+    void showBannerText(String message);
 }

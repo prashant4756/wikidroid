@@ -26,6 +26,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import io.realm.RealmResults;
 
 public class MainActivityPresenter implements MainActivityPresenterInterface{
 
@@ -38,14 +39,20 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
         this.wikiPostDao = new WikiPostDao();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getResultsBasedOnQuery(SearchView searchView) {
         getObservableQuery(searchView)
                 .filter(new Predicate<String>() {
                     @Override
                     public boolean test(@NonNull String s) throws Exception {
-                        if(s.equals("")){
-                            mainActivityViewInterface.displayVisitedData(wikiPostDao.getVisitedWikiPost());
+                        if(s == null || s.isEmpty()){
+                            RealmResults<WikiPost> wikiPosts = wikiPostDao.getVisitedWikiPost();
+                            if(wikiPosts.size() > 0)
+                                mainActivityViewInterface.showBannerText("Showing visited pages");
+                            else
+                                mainActivityViewInterface.showBannerText("You haven't visited any pages yet!");
+                            mainActivityViewInterface.displayVisitedData(wikiPosts);
                             return false;
                         }else{
                             mainActivityViewInterface.showProgressBar();
@@ -102,6 +109,7 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
                     public void onError(Throwable e) {
                         Log.d(TAG,"Error"+e.getMessage());
                         mainActivityViewInterface.hideProgressBar();
+                        mainActivityViewInterface.displayError(e.getMessage());
                     }
 
                     @Override
@@ -114,7 +122,12 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
     @Override
     public void setVisitedData() {
-        mainActivityViewInterface.displayVisitedData(wikiPostDao.getVisitedWikiPost());
+        RealmResults<WikiPost> wikiPosts = wikiPostDao.getVisitedWikiPost();
+        if(wikiPosts.size() > 0)
+            mainActivityViewInterface.showBannerText("Showing visited pages");
+        else
+            mainActivityViewInterface.showBannerText("You haven't visited any pages yet!");
+        mainActivityViewInterface.displayVisitedData(wikiPosts);
     }
 
     private Observable<String> getObservableQuery(SearchView searchView){
@@ -149,6 +162,7 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
                     ArrayList<WikiPost> results = wikiPostDao.updateLocalFromJson(new JSONObject(stringResponse));
                     mainActivityViewInterface.hideProgressBar();
+                    mainActivityViewInterface.showBannerText("Showing results from wikipedia");
                     mainActivityViewInterface.displayResult(results);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -159,10 +173,10 @@ public class MainActivityPresenter implements MainActivityPresenterInterface{
 
             @Override
             public void onError(@NonNull Throwable e) {
-                Log.d(TAG,"Error"+e);
                 e.printStackTrace();
                 mainActivityViewInterface.hideProgressBar();
-                mainActivityViewInterface.displayError("Error fetching Movie Data");
+                mainActivityViewInterface.hideMessageBanner();
+                mainActivityViewInterface.displayError("Error fetching Data");
             }
 
             @Override

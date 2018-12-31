@@ -1,5 +1,6 @@
 package com.example.wikidroid.ui.wikipostdetails;
 
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,8 +21,8 @@ import butterknife.ButterKnife;
 
 public class WebViewActivity extends AppCompatActivity implements WebDetailsViewInterface{
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar toolbar;
     @BindView(R.id.webView)
     WebView webView;
     @BindView(R.id.progressBar)
@@ -49,7 +50,7 @@ public class WebViewActivity extends AppCompatActivity implements WebDetailsView
     }
 
     private void setUpViews() {
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
 
 //        cache
         webView.getSettings().setAppCacheMaxSize( 5 * 1024 * 1024 ); // 5MB
@@ -63,13 +64,23 @@ public class WebViewActivity extends AppCompatActivity implements WebDetailsView
             webView.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
         }
 
-        webView.loadUrl( "http://www.google.com" );
-
         // Enable javascript
         webView.getSettings().setJavaScriptEnabled(true);
         // Set WebView client
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progressBar.setVisibility(View.GONE);
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wikidroid.R;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements MainActivityViewInterface{
+public class MainActivity extends AppCompatActivity implements MainActivityViewInterface {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     RecyclerView recyclerView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.txtMessage)
+    TextView txtMessage;
 
     private SearchView searchView;
     WikiPostAdapter adapter;
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupMVP(){
+    private void setupMVP() {
         mainActivityPresenter = new MainActivityPresenter(this);
     }
 
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_search,menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search)
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if(id == R.id.action_search){
+        if (id == R.id.action_search) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -145,5 +148,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewI
         data.clear();
         data.addAll(wikiPostRealmResults);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void hideMessageBanner() {
+        txtMessage.setText("");
+        txtMessage.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showBannerText(String message) {
+        txtMessage.setText(message);
+        txtMessage.setVisibility(View.VISIBLE);
     }
 }

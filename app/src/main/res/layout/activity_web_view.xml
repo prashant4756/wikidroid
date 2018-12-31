@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.wikipostdetails.WebViewActivity">
 
-    <include layout="@layout/toolbar"/>
 
     <WebView
         android:id="@+id/webView"
