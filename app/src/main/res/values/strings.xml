@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WikiDroid</string>
+    <string name="wikidroid">WikiDroid</string>
+    <string name="search_wikipedia">Search Wikipedia</string>
+    <string name="visited_pages">Visited Pages</string>
+    <string name="no_visited_pages">You don\'t have visited pages yet.</string>
+    <string name="showing_from_wikipedia">Showing results from Wikipedia</string>
+</resources>
